@@ -46,7 +46,9 @@ app.use(helmet());
 app.use(cors(corsOptions));
 
 //routes
-
+app.use('/', (req,res,next)=>{
+    res.send('Server Running')
+})
 app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/orders', authenticationMiddleware, orderRoute);
 app.use('/api/v1/content', authenticationMiddleware, contentRoute);
