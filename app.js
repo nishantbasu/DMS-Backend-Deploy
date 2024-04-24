@@ -5,8 +5,12 @@ const helmet = require('helmet');
 const cors = require('cors');
 const rateLimiter = require('express-rate-limit');
 
+const path = require('path');
 const express = require('express');
 const app = express();
+
+const uploadsPath = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsPath));
 
 const connectDb = require('./db/connect');
 const authenticationMiddleware = require('./middleware/auth');
