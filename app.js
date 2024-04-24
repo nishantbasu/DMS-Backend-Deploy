@@ -15,6 +15,7 @@ const userRoute = require('./routes/users');
 const orderRoute = require('./routes/order');
 const contentRoute = require('./routes/content');
 const hubsRoute = require('./routes/hub');
+const categoryRoute = require('./routes/category');
 const ridersRoute = require('./routes/rider');
 const dmsRoute = require('./routes/dms');
 
@@ -46,10 +47,12 @@ app.use(helmet());
 app.use(cors(corsOptions));
 
 //routes
+
 app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/orders', authenticationMiddleware, orderRoute);
 app.use('/api/v1/content', authenticationMiddleware, contentRoute);
 app.use('/api/v1/hubs', authenticationMiddleware, hubsRoute);
+app.use('/api/v1/category', authenticationMiddleware, categoryRoute);
 app.use('/api/v1/riders', authenticationMiddleware, ridersRoute);
 app.use('/api/v1/dms', authenticationMiddleware, dmsRoute);
 

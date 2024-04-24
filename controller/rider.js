@@ -30,4 +30,13 @@ const updateRiders = async (req, res, next) => {
     res.status(StatusCodes.OK).json({ rider });
 };
 
-module.exports = { getAllRiders, createRiders, updateRiders };
+const deleteRiders = async (req, res, next) => {
+    const { id: riderId } = req.params;
+    const rider = await Riders.findOneAndDelete({ _id: riderId })
+    if (!rider) {
+        throw new NotFoundError('Not Found')
+    }
+    res.status(StatusCodes.OK).send();
+};
+
+module.exports = { getAllRiders, createRiders, updateRiders, deleteRiders };

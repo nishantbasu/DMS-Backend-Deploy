@@ -30,4 +30,13 @@ const updateHubs = async (req, res, next) => {
     res.status(StatusCodes.OK).json({ hub });
 };
 
-module.exports = { getAllHubs, createHubs, updateHubs };
+const deleteHubs = async (req, res, next) => {
+    const { id: hubId } = req.params;
+    const hub = await Hubs.findOneAndDelete({ _id: hubId })
+    if (!hub) {
+        throw new NotFoundError('Not Found')
+    }
+    res.status(StatusCodes.OK).send();
+};
+
+module.exports = { getAllHubs, createHubs, updateHubs, deleteHubs };

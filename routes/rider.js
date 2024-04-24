@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAllRiders, createRiders, updateRiders } = require('../controller/rider');
+const { getAllRiders, createRiders, updateRiders, deleteRiders } = require('../controller/rider');
 
 router.route('/').get(getAllRiders).post(createRiders);
-router.route('/:id').patch(updateRiders);
+router.route('/:id').patch(updateRiders).delete(deleteRiders);
 
 
 module.exports = router;
