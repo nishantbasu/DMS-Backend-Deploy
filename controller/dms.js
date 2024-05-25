@@ -8,4 +8,10 @@ const getInitialData = async (req, res, next) => {
     res.status(StatusCodes.OK).json({ user: userData,content:contentData });
 };
 
-module.exports = { getInitialData };
+const getAllUsers = async (req, res, next) => {
+    const users = await Users.find({})
+    res.status(StatusCodes.OK).json({ users: users });
+};
+
+
+module.exports = { getInitialData, getAllUsers };

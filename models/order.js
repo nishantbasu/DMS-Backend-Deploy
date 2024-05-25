@@ -50,7 +50,23 @@ const OrdersSchema = new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:'Users',
         required: [true, 'Please provide user']
-    }
+    },
+    createdByName: String
 },{timestamps:true});
+
+OrdersSchema.pre('save', async function () {
+    try {
+        const User = mongoose.model('Users');
+        const user = await User.findById(this.createdBy);
+        if (!user) {
+            this.createdByName = 'Unknown';
+        } else {
+            this.createdByName = user.name; // Assuming 'name' is the field in the Users model that stores the user's name
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        this.createdByName = 'Unknown'; // Set default name if there's an error
+    }
+});
 
 module.exports = mongoose.model('Orders', OrdersSchema)
