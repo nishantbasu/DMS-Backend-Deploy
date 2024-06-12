@@ -20,7 +20,7 @@ const login = async (req, res, next) => {
     }
 
     const token = user.createJWT();
-    res.status(StatusCodes.OK).json({msg:'Logged in', user:{name:user.name, email:user.email, avatarUrl : user.avtarUrl, accessLevel: user.accessLevel },token});
+    res.status(StatusCodes.OK).json({msg:'Logged in', user:{name:user.name, email:user.email, avatarUrl : user.avtarUrl, accessLevel: user.accessLevel, mappedHub : user.mappedHub, mappedCategories: user.mappedCategories },token});
 };
 
 const register = async (req, res, next) => {
@@ -31,7 +31,7 @@ const register = async (req, res, next) => {
 
     const user = await Users.create({...req.body});
     const token = user.createJWT();
-    res.status(StatusCodes.CREATED).json({msg:'User Created',user:{name:user.name, email: user.email, avatarUrl : user.avtarUrl, accessLevel: user.accessLevel },token});
+    res.status(StatusCodes.CREATED).json({msg:'User Created',user:{name:user.name, email: user.email, avatarUrl : user.avtarUrl, accessLevel: user.accessLevel, mappedHub : user.mappedHub, mappedCategories: user.mappedCategories },token});
 };
 
 module.exports = {login,register};

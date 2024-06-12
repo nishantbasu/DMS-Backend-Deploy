@@ -13,5 +13,42 @@ const getAllUsers = async (req, res, next) => {
     res.status(StatusCodes.OK).json({ users: users });
 };
 
+const updateUser = async (req, res, next) => {
+    const { id: userId } = req.params;
+    if (userId === '') {
+        throw new BadRequestError('User id cannot be empty');
+    }
+    const user = await Users.findOneAndUpdate({ _id: userId }, req.body, {
+        new: true,
+        runValidators: true
+    });
+    if (!user) {
+        throw new NotFoundError('Not Found')
+    }
+    res.status(StatusCodes.OK).json({ user });
+};
 
-module.exports = { getInitialData, getAllUsers };
+const deleteUser = async (req, res, next) => {
+    const { id: userId } = req.params;
+    if (userId === '') {
+        throw new BadRequestError('User id cannot be empty');
+    }
+    const user = await Users.findOneAndDelete({ _id:userId })
+    if (!user) {
+        throw new NotFoundError('Not Found')
+    }
+    res.status(StatusCodes.OK).send();
+};
+
+const getUserById = async (req, res, next) => {
+    const {params:{id:userId}}= req;
+
+    const user = await Users.findOne({ _id: userId })
+    if (!user) {
+        throw new NotFoundError('Not Found')
+    }
+    res.status(StatusCodes.OK).json({ user });
+};
+
+
+module.exports = { getInitialData, getAllUsers, updateUser, deleteUser, getUserById };

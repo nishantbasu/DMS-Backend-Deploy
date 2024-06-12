@@ -6,8 +6,10 @@ const cors = require('cors');
 const rateLimiter = require('express-rate-limit');
 
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const app = express();
+const cron = require('node-cron');
 
 const uploadsPath = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(uploadsPath));
@@ -64,6 +66,40 @@ app.use('/api/v1/dms', authenticationMiddleware, dmsRoute);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
+// scheduler
+const Orders = require('./models/order');
+
+// Function to delete old orders
+const deleteOldOrders = async () => {
+    const eightDaysAgo = new Date();
+    eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
+
+    try {
+        const oldOrders = await Orders.find({ createdAt: { $lt: eightDaysAgo } });
+
+        // Delete the orders
+        const result = await Orders.deleteMany({ createdAt: { $lt: eightDaysAgo } });
+
+        // Delete the corresponding image folders
+        oldOrders.forEach(order => {
+            const orderId = order._id.toString();
+            const orderFolderPath = path.join(__dirname, 'uploads', orderId);
+
+            // Check if the folder exists
+            if (fs.existsSync(orderFolderPath)) {
+                // Delete the folder and its contents
+                fs.rmdirSync(orderFolderPath, { recursive: true });
+            }
+        });
+    } catch (error) {
+        console.error('Error deleting old orders or their folders:', error);
+    }
+};
+// Schedule the cron job to run every day at midnight
+cron.schedule('0 0 * * *', () => {
+    deleteOldOrders();
+});
+
 //app start
 const port = process.env.PORT || 3000;
 
@@ -73,6 +109,7 @@ const start = async () => {
         app.listen(port, () => {
             console.log(`Server is listening on port ${port}...`)
         });
+        await deleteOldOrders();
     } catch (error) {
         console.log(error);
     }

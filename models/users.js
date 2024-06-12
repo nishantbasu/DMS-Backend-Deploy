@@ -28,11 +28,19 @@ const UsersSchema = new mongoose.Schema({
         type: String,
         required:true,
         enum : {
-            values :['Admin', 'User'],
+            values :['Super_Admin', 'Admin', 'User'],
             message : '{VALUE} is not supported'
         },
-        default: 'Admin'
-    }
+        default: 'Super_Admin'
+    },
+    mappedHub : {
+        type: [String],
+        required:false
+    },
+    mappedCategories : {
+        type: [String],
+        required:false
+    },
 });
 
 UsersSchema.pre('save', async function(next){
