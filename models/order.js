@@ -51,7 +51,8 @@ const OrdersSchema = new mongoose.Schema({
         ref:'Users',
         required: [true, 'Please provide user']
     },
-    createdByName: String
+    createdByName: String,
+    createdByEmail: String
 },{timestamps:true});
 
 OrdersSchema.pre('save', async function () {
@@ -60,12 +61,16 @@ OrdersSchema.pre('save', async function () {
         const user = await User.findById(this.createdBy);
         if (!user) {
             this.createdByName = 'Unknown';
+            this.createdByEmail = 'Unknown';
         } else {
-            this.createdByName = user.name; // Assuming 'name' is the field in the Users model that stores the user's name
+            this.createdByName = user.name; 
+            this.createdByEmail = user.email;
+            // Assuming 'name' is the field in the Users model that stores the user's name
         }
     } catch (error) {
         console.error('Error:', error);
-        this.createdByName = 'Unknown'; // Set default name if there's an error
+        this.createdByName = 'Unknown'; 
+        this.createdByEmail = 'Unknown';// Set default name if there's an error
     }
 });
 
