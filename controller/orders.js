@@ -50,7 +50,7 @@ const createOrder = async (req, res, next) => {
 const updateOrder = async (req, res, next) => {
     const {userId} = req.user;
     const { id: orderId } = req.params;
-    const order = await Orders.findOneAndUpdate({ _id: orderId, createdBy:userId }, req.body, {
+    const order = await Orders.findOneAndUpdate({ _id: orderId }, req.body, {
         new: true,
         runValidators: true
     });
@@ -63,7 +63,7 @@ const updateOrder = async (req, res, next) => {
 const deleteOrder = async (req, res, next) => {
     const {userId} = req.user;
     const { id: orderId } = req.params;
-    const order = await Orders.findOneAndDelete({ _id:orderId, createdBy:userId })
+    const order = await Orders.findOneAndDelete({ _id:orderId })
     if (!order) {
         throw new NotFoundError('Not Found')
     }
